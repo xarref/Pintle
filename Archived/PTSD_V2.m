@@ -57,13 +57,13 @@ clc; clear;
 
 SET.pInj = 60 * 0.95;  % Injection pressure, assuming 5% pressure drop in lines [bar]
 SET.pComb = 35;        % Combustion chamber pressure [bar]
-SET.dComb = 72;        % Combustion chamber diameter [mm] (rigenerativo) 
-SET.OF = 2.9;          % Oxidizer to Fuel ratio [-]
+SET.dComb = 76;        % Combustion chamber diameter [mm] (rigenerativo) 
+SET.OF = 2.6;          % Oxidizer to Fuel ratio [-]
 
 % Fluid Properties
 SET.oxidizer = 'N2O';   % Oxidizer fluid name
 SET.fuel = 'Ethanol';   % Fuel fluid name
-SET.dmOx = 1.15;        % Mass flow rate Oxidizer [kg/s]
+SET.dmOx = 1.3502;        % Mass flow rate Oxidizer [kg/s]
 SET.cdOx = 0.65;        % Discharge coefficient for oxidizer [-]
 SET.tankTemperature = 298; % Tank temperature [K]
 
@@ -76,9 +76,9 @@ SET.dmFuel = SET.dmOx/SET.OF;  % Mass flow rate Fuel [kg/s]
 SET.cdFuelHole = 0.611;  % Discharge coefficient for fuel holes [-]
 
 % Design Parameters
-SET.rPr_fixed = 4;     % Minimum pintle root radius for structural integrity [mm]
+SET.rPr_fixed = 2;     % Minimum pintle root radius for structural integrity [mm]
 SET.ratio_AcgAmin = 1.25;  % Ratio of chamber to minimum injection area [-]
-SET.tPost = 1.5;       % Small chamfer between inner and outer wall of first channel [mm]
+SET.tPost = 4.5;       % Small chamfer between inner and outer wall of first channel [mm]
 
 
 
@@ -384,7 +384,7 @@ fprintf('Configuration 3: Fuel Internal with Holes and N2O Annulus \n\n\n');
 fprintf('Computed fuel injection area: %.4f mm²\n', aFuel); 
 
 % Hole diameter options (meters)
-dFuelHoleOptions = [0.3, 0.4, 0.5, 0.6, 0.8] * 1e-3;
+dFuelHoleOptions = [ 0.3, 0.4, 0.5, 0.6, 0.8] * 1e-3;
 rowOptions = [1, 2, 3, 4, 5];
 
 % Prepare storage for results
@@ -422,12 +422,12 @@ for i = 1:length(dFuelHoleOptions)
         angularSpacing = 360 / holesPerRow;  % Degrees
 
         % Convert angular spacing to radians (to calculate arcDistance)
-        angularSpacingRad = deg2rad(angularSpacing) - 2*dHole;
+        angularSpacingRad = deg2rad(angularSpacing);
 
         % Iterate through rPost values for each row
         for k = 1:length(rPost)
             % Calculate arc distance for the current rPost value
-            arcDistance = rPost(k) * angularSpacingRad;
+            arcDistance = rPost(k) * angularSpacingRad - dHole;
 
             % Store results, including the current rPost value
             resultsMatrix{i,j,k} = struct(...
@@ -452,7 +452,9 @@ fprintf('-----------------------------------------------------------------------
 fprintf('| Hole Dia. | Hole Area  | Rows | Holes/Row   | Total Holes  | Mass Flow (kg/s) | Error (%%) || Angular Delta | Arc Distance (mm)  | rPost (mm)    |\n');
 fprintf('|-------------------------------------------------------------------------------------------------------------------------------------------------|\n');
 for i = 1:length(dFuelHoleOptions)
+    fprintf('|\n');
     for j = 1:length(rowOptions)
+        fprintf('|\n');
         for k = 1:length(rPost)
             res = resultsMatrix{i,j,k};
 
@@ -486,3 +488,4 @@ end
     % Calculate TMR
     TMR = ( SET.dmFuel* v_radial) / (SET.dmOx * v_annular);
 
+    
