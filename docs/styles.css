@@ -662,3 +662,20 @@ input:checked + .slider:before {
         padding: 6px 4px;
     }
 }
+
+/* Footer */
+.footer {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    font-size: 14px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.footer p {
+    margin: 0;
+    opacity: 0.9;
+    font-weight: 500;
+}
