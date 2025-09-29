@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pintle Injector Design Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Using NIST WebBook API for accurate thermodynamic properties -->
+</head>
+<body>
+    <!-- Main container for the entire application -->
+    <div class="container">
+        <!-- Header section with gradient background -->
+        <header class="header">
+            <h1>Pintle Injector Design Analysis</h1>
+            <p>Engineering tool for rocket injector design calculations</p>
+        </header>
+
+        <!-- Tab navigation - creates the 5 tabs like in MATLAB -->
+        <div class="tab-container">
+            <div class="tab-nav">
+                <button class="tab-button active" data-tab="input">Input Parameters</button>
+                <button class="tab-button" data-tab="design-fuel">Design - Fuel Internal</button>
+                <button class="tab-button" data-tab="perf-fuel">Performance - Fuel Internal</button>
+                <button class="tab-button" data-tab="design-ox">Design - Oxidizer Internal</button>
+                <button class="tab-button" data-tab="perf-ox">Performance - Oxidizer Internal</button>
+            </div>
+
+            <!-- Tab 1: Input Parameters - mirrors the MATLAB input form -->
+            <div class="tab-content active" id="input">
+                <div class="input-grid">
+                    <!-- Operating Conditions Section -->
+                    <div class="section-header">Operating Conditions</div>
+                    <div></div>
+                    <div class="section-header">Mass Flow Parameters</div>
+                    <!-- Mass Flow Calculation Mode Switch - right under the subtitle -->
+                    <div class="mass-flow-switch-small">
+                        <span class="switch-label-small">Mass Flow Mode:</span>
+                        <div class="switch-container">
+                            <span id="mode-label-left">Direct</span>
+                            <label class="switch-small">
+                                <input type="checkbox" id="mass-flow-mode">
+                                <span class="slider-small"></span>
+                            </label>
+                            <span id="mode-label-right">O/F Calc</span>
+                        </div>
+                    </div>
+
+                    <label for="pInj_fuel">Fuel Injection Pressure (bar):</label>
+                    <input type="number" id="pInj_fuel" value="70" step="0.01">
+                    <label for="dmFuel">Fuel Mass Flow (kg/s):</label>
+                    <input type="number" id="dmFuel" value="0.346492933736679" step="0.000001">
+
+                    <label for="pInj_ox">Oxidizer Injection Pressure (bar):</label>
+                    <input type="number" id="pInj_ox" value="70" step="0.01">
+                    <label for="dmOx">Oxidizer Mass Flow (kg/s):</label>
+                    <input type="number" id="dmOx" value="1.385971734946714" step="0.000001">
+
+                    <label for="pComb">Chamber Pressure (bar):</label>
+                    <input type="number" id="pComb" value="40" step="0.01">
+                    <label for="dComb">Chamber Diameter (mm):</label>
+                    <input type="number" id="dComb" value="80" step="0.1">
+
+                    <label for="OF">O/F Ratio:</label>
+                    <input type="number" id="OF" value="3.1" step="0.01">
+                    <div class="section-header">Discharge Coefficients</div>
+                    <div></div>
+
+                    <div></div>
+                    <div></div>
+                    <label for="cdAnnulus">Annular Injection Cd:</label>
+                    <input type="number" id="cdAnnulus" value="0.65" step="0.001">
+
+                    <div></div>
+                    <div></div>
+                    <label for="cdHole">Discrete Holes Cd:</label>
+                    <input type="number" id="cdHole" value="0.611" step="0.001">
+
+                    <div class="section-header">Fluid Properties</div>
+                    <div></div>
+                    <div class="section-header">Geometric Parameters</div>
+                    <div></div>
+
+                    <label for="oxTemp">Oxidizer Temperature (K): <span id="oxTempC" class="temp-celsius">(0°C)</span></label>
+                    <input type="number" id="oxTemp" value="273" step="0.1">
+                    <label for="maxRatio">Max Chamber/Pintle Ratio:</label>
+                    <input type="number" id="maxRatio" value="5" step="0.1">
+
+                    <label for="fuelTemp">Fuel Temperature (K): <span id="fuelTempC" class="temp-celsius">(20°C)</span></label>
+                    <input type="number" id="fuelTemp" value="293" step="0.1">
+                    <label for="minRatio">Min Chamber/Pintle Ratio:</label>
+                    <input type="number" id="minRatio" value="3" step="0.1">
+
+                    <div></div>
+                    <div></div>
+                    <label for="nPintles">Number of Pintle Sizes:</label>
+                    <input type="number" id="nPintles" value="5" step="1" min="1">
+                </div>
+
+                <!-- Property Calculation Mode Toggle -->
+                <div class="property-mode-section">
+                    <div class="mode-toggle-container">
+                        <label class="toggle-label">
+                            <span class="toggle-text">Thermodynamic Property Calculation:</span>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="property-mode-toggle">
+                                <span class="slider"></span>
+                            </div>
+                            <span class="toggle-description" id="mode-description">Fast Engineering Approximations (±1%)</span>
+                        </label>
+                    </div>
+                    
+                    <!-- Operating Range Information -->
+                    <div class="range-info" id="range-info">
+                        <div class="range-section">
+                            <strong>Current Mode:</strong> <span id="current-mode">Fast Engineering Approximations</span>
+                            <div class="mode-note">
+                                <em>Toggle ON for CoolProp/NIST-quality reference data with bilinear interpolation (±0.1% accuracy)</em>
+                            </div>
+                            <div class="ranges">
+                                <div><strong>Ethanol Coverage:</strong> <span id="ethanol-range">250-350K, 1-100 bar (±1%)</span></div>
+                                <div><strong>N2O Coverage:</strong> <span id="n2o-range">180-400K, 1-100 bar (±1%)</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Property Status Indicator -->
+                <div class="property-status" id="property-status">
+                    <span class="status-icon">⚙️</span>
+                    <span id="status-text">Loading thermodynamic properties...</span>
+                </div>
+
+                <!-- Run Analysis Button - triggers all calculations -->
+                <div class="run-button-container">
+                    <button id="runAnalysis" class="run-button">Run Analysis</button>
+                </div>
+            </div>
+
+            <!-- Tab 2: Design - Fuel Internal Results -->
+            <div class="tab-content" id="design-fuel">
+                <div class="filters">
+                    <label>Hole Dia (mm): 
+                        <select id="filter-hole-df">
+                            <option value="All">All</option>
+                            <option value="0.50">0.50</option>
+                            <option value="0.60">0.60</option>
+                            <option value="0.80">0.80</option>
+                            <option value="1.00">1.00</option>
+                            <option value="1.20">1.20</option>
+                        </select>
+                    </label>
+                    <label>Rows: 
+                        <select id="filter-rows-df">
+                            <option value="All">All</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </label>
+                    <label>rPintle (mm): 
+                        <select id="filter-pintle-df">
+                            <option value="All">All</option>
+                        </select>
+                    </label>
+                    <button id="reset-filters-df">Reset Filters</button>
+                </div>
+                <div class="table-container">
+                    <table id="table-design-fuel">
+                        <thead>
+                            <tr>
+                                <th>Hole Dia. (mm)</th>
+                                <th>Hole Area (mm²)</th>
+                                <th>Rows</th>
+                                <th>Holes/Row</th>
+                                <th>Total Holes</th>
+                                <th>Mass Flow (kg/s)</th>
+                                <th>Error (%)</th>
+                                <th>Angular Δ (deg)</th>
+                                <th>Arc Distance (mm)</th>
+                                <th>rPintle (mm)</th>
+                                <th>Annulus Width (mm)</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 3: Performance - Fuel Internal Results -->
+            <div class="tab-content" id="perf-fuel">
+                <div class="filters">
+                    <label>Hole Dia (mm): 
+                        <select id="filter-hole-pf">
+                            <option value="All">All</option>
+                            <option value="0.50">0.50</option>
+                            <option value="0.60">0.60</option>
+                            <option value="0.80">0.80</option>
+                            <option value="1.00">1.00</option>
+                            <option value="1.20">1.20</option>
+                        </select>
+                    </label>
+                    <label>Rows: 
+                        <select id="filter-rows-pf">
+                            <option value="All">All</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </label>
+                    <label>rPintle (mm): 
+                        <select id="filter-pintle-pf">
+                            <option value="All">All</option>
+                        </select>
+                    </label>
+                    <button id="reset-filters-pf">Reset Filters</button>
+                </div>
+                <div class="table-container">
+                    <table id="table-perf-fuel">
+                        <thead>
+                            <tr>
+                                <th>Hole Dia. (mm)</th>
+                                <th>Hole Area (mm²)</th>
+                                <th>rPintle (mm)</th>
+                                <th>v_oxid (m/s)</th>
+                                <th>v_fuel (m/s)</th>
+                                <th>TMR</th>
+                                <th>alpha (°)</th>
+                                <th>BF</th>
+                                <th>Rows</th>
+                                <th>Holes/Row</th>
+                                <th>Total Holes</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 4: Design - Oxidizer Internal Results -->
+            <div class="tab-content" id="design-ox">
+                <div class="filters">
+                    <label>Hole Dia (mm): 
+                        <select id="filter-hole-do">
+                            <option value="All">All</option>
+                            <option value="0.50">0.50</option>
+                            <option value="0.60">0.60</option>
+                            <option value="0.80">0.80</option>
+                            <option value="1.00">1.00</option>
+                            <option value="1.20">1.20</option>
+                        </select>
+                    </label>
+                    <label>Rows: 
+                        <select id="filter-rows-do">
+                            <option value="All">All</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </label>
+                    <label>rPintle (mm): 
+                        <select id="filter-pintle-do">
+                            <option value="All">All</option>
+                        </select>
+                    </label>
+                    <button id="reset-filters-do">Reset Filters</button>
+                </div>
+                <div class="table-container">
+                    <table id="table-design-ox">
+                        <thead>
+                            <tr>
+                                <th>Hole Dia. (mm)</th>
+                                <th>Hole Area (mm²)</th>
+                                <th>Rows</th>
+                                <th>Holes/Row</th>
+                                <th>Total Holes</th>
+                                <th>Mass Flow (kg/s)</th>
+                                <th>Error (%)</th>
+                                <th>Angular Δ (deg)</th>
+                                <th>Arc Distance (mm)</th>
+                                <th>rPintle (mm)</th>
+                                <th>Annulus Width (mm)</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 5: Performance - Oxidizer Internal Results -->
+            <div class="tab-content" id="perf-ox">
+                <div class="filters">
+                    <label>Hole Dia (mm): 
+                        <select id="filter-hole-po">
+                            <option value="All">All</option>
+                            <option value="0.50">0.50</option>
+                            <option value="0.60">0.60</option>
+                            <option value="0.80">0.80</option>
+                            <option value="1.00">1.00</option>
+                            <option value="1.20">1.20</option>
+                        </select>
+                    </label>
+                    <label>Rows: 
+                        <select id="filter-rows-po">
+                            <option value="All">All</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </label>
+                    <label>rPintle (mm): 
+                        <select id="filter-pintle-po">
+                            <option value="All">All</option>
+                        </select>
+                    </label>
+                    <button id="reset-filters-po">Reset Filters</button>
+                </div>
+                <div class="table-container">
+                    <table id="table-perf-ox">
+                        <thead>
+                            <tr>
+                                <th>Hole Dia. (mm)</th>
+                                <th>Hole Area (mm²)</th>
+                                <th>rPintle (mm)</th>
+                                <th>v_oxid (m/s)</th>
+                                <th>v_fuel (m/s)</th>
+                                <th>TMR</th>
+                                <th>alpha (°)</th>
+                                <th>BF</th>
+                                <th>Rows</th>
+                                <th>Holes/Row</th>
+                                <th>Total Holes</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading overlay for when calculations are running -->
+    <div id="loading" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Running Analysis...</p>
+        </div>
+    </div>
+
+    <!-- Link to our JavaScript file that contains all the logic -->
+    <script src="script.js"></script>
+</body>
+</html>

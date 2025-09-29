@@ -1,0 +1,664 @@
+/* 
+   CSS Styles for Pintle Injector Calculator
+   This file contains all the visual styling for our web application
+*/
+
+/* Reset default browser styles and set up basic styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Main body styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+/* Container for the entire application */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    min-height: 100vh;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* Header with orange-yellow gradient background */
+.header {
+    background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    font-weight: 300;
+}
+
+.header p {
+    font-size: 1.2em;
+    opacity: 0.9;
+}
+
+/* Tab navigation styling */
+.tab-container {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.tab-nav {
+    display: flex;
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    overflow-x: auto; /* Allow horizontal scrolling on small screens */
+}
+
+.tab-button {
+    flex: 1;
+    padding: 15px 20px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+    min-width: 200px; /* Ensure buttons don't get too small */
+}
+
+.tab-button:hover {
+    background: #e9ecef;
+    color: #333;
+}
+
+.tab-button.active {
+    background: white;
+    color: #ff8c00;
+    border-bottom: 3px solid #ff8c00;
+}
+
+/* Tab content containers */
+.tab-content {
+    display: none;
+    padding: 30px;
+    min-height: 600px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Input form grid layout (2x2 grid as specified) */
+.input-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr 1fr;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+}
+
+/* Section headers in the input form */
+.section-header {
+    font-weight: bold;
+    font-size: 16px;
+    color: #ff8c00;
+    border-bottom: 2px solid #ff8c00;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+
+/* Labels for input fields */
+.input-grid label {
+    font-weight: 500;
+    color: #555;
+    align-self: center;
+}
+
+/* Input field styling */
+.input-grid input {
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.input-grid input:focus {
+    outline: none;
+    border-color: #ff8c00;
+    box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.1);
+}
+
+/* Run Analysis button container and styling */
+.run-button-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.run-button {
+    background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.run-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 140, 0, 0.4);
+    background: linear-gradient(135deg, #e67c00 0%, #ff8c00 100%);
+}
+
+.run-button:active {
+    transform: translateY(0);
+}
+
+/* Filter controls above tables */
+.filters {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filters label {
+    font-weight: 500;
+    color: #555;
+}
+
+.filters select {
+    margin-left: 10px;
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.filters button {
+    background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.filters button:hover {
+    background: linear-gradient(135deg, #e67c00 0%, #ff8c00 100%);
+}
+
+/* Table container with horizontal scroll */
+.table-container {
+    overflow-x: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    min-width: 1200px; /* Ensure table doesn't get too cramped */
+}
+
+/* Sticky table headers */
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+th {
+    background: #ff8c00;
+    color: white;
+    padding: 15px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+/* Alternating row colors for better readability */
+tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+tbody tr:hover {
+    background-color: #e3f2fd;
+}
+
+/* Loading overlay that appears during calculations */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loading-content {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* Spinning animation for loading indicator */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #ff8c00;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Mass flow calculation mode switch */
+.mass-flow-switch {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    background: linear-gradient(135deg, #fff3e6 0%, #ffe4cc 100%);
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #ff8c00;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+/* Smaller mass flow switch - takes only one column */
+.mass-flow-switch-small {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #fff3e6 0%, #ffe4cc 100%);
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #ff8c00;
+    font-size: 12px;
+}
+
+.switch-label-small {
+    font-weight: 600;
+    color: #ff8c00;
+    font-size: 11px;
+    text-align: center;
+}
+
+.switch-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+}
+
+.switch-small {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.switch-small input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider-small {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 22px;
+}
+
+.slider-small:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.switch-small input:checked + .slider-small {
+    background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
+}
+
+.switch-small input:checked + .slider-small:before {
+    transform: translateX(18px);
+}
+
+/* Input field disabled state */
+.input-grid input:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+}
+
+/* Property calculation mode toggle */
+.property-mode-section {
+    margin: 20px 0;
+    padding: 15px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.mode-toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.toggle-text {
+    font-size: 16px;
+    color: #333;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 60px;
+    height: 30px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #4CAF50;
+    transition: 0.3s;
+    border-radius: 30px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+input:checked + .slider {
+    background-color: #ff8c00;
+}
+
+input:checked + .slider:before {
+    transform: translateX(30px);
+}
+
+.toggle-description {
+    font-size: 14px;
+    color: #666;
+    font-weight: normal;
+}
+
+.range-info {
+    text-align: center;
+    font-size: 14px;
+}
+
+.range-section {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.ranges {
+    margin-top: 8px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.ranges > div {
+    color: #555;
+}
+
+.mode-note {
+    margin: 8px 0;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.mode-note em {
+    color: #0066cc;
+    font-style: italic;
+}
+
+/* Property status indicator */
+.property-status {
+    text-align: center;
+    margin: 20px 0;
+    padding: 10px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    font-size: 14px;
+    color: #666;
+}
+
+.property-status.ready {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border-color: #28a745;
+    color: #155724;
+}
+
+.property-status.fallback {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border-color: #ffc107;
+    color: #856404;
+}
+
+.status-icon {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+/* Temperature conversion display */
+.temp-celsius {
+    font-size: 0.9em;
+    color: #666;
+    font-style: italic;
+    font-weight: normal;
+}
+
+/* Tablet responsive design - breakpoint at 1024px */
+@media (max-width: 1024px) {
+    .input-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        max-width: 800px;
+    }
+    
+    .section-header {
+        grid-column: 1 / -1;
+        text-align: center;
+        margin: 15px 0 10px 0;
+    }
+    
+    .mass-flow-switch {
+        grid-column: 1 / -1;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .mass-flow-switch-small {
+        padding: 10px;
+    }
+}
+
+/* Mobile responsive design - breakpoint at 768px */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .header {
+        padding: 20px;
+    }
+    
+    .header h1 {
+        font-size: 2em;
+    }
+    
+    .tab-content {
+        padding: 15px;
+    }
+    
+    /* Stack input grid vertically on mobile */
+    .input-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        max-width: 100%;
+    }
+    
+    .section-header {
+        margin: 20px 0 10px 0;
+        text-align: center;
+    }
+    
+    /* Stack filters vertically on mobile */
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filters label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .filters select {
+        margin-left: 0;
+        margin-top: 5px;
+    }
+    
+    /* Mass flow switch responsive */
+    .mass-flow-switch {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .mass-flow-switch span {
+        margin: 0 5px;
+    }
+    
+    .mass-flow-switch-small {
+        padding: 10px;
+        font-size: 11px;
+    }
+    
+    .switch-container {
+        gap: 6px;
+        font-size: 9px;
+    }
+    
+    /* Smaller text on mobile tables */
+    th, td {
+        font-size: 12px;
+        padding: 8px 6px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.8em;
+    }
+    
+    .tab-button {
+        min-width: 150px;
+        font-size: 12px;
+        padding: 12px 15px;
+    }
+    
+    th, td {
+        font-size: 11px;
+        padding: 6px 4px;
+    }
+}
